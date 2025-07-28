@@ -10,3 +10,6 @@ source venv/bin/activate
 pip install -r requirements.txt 
 
 ```
+
+## 数据库配置
+复制 .env.sample 为 .env 文件，并修改其中的数据库配置
