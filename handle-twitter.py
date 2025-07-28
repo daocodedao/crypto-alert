@@ -1,6 +1,7 @@
 # pip install DiscordWebhook
 # https://github.com/S-PScripts/chromebook-utilities/blob/700fb88ca6f14959a1b57e39942ac0013dc78575/Alternatives/Twitter%20(X)%20Altenative%20Links.txt#L22
 # https://twiiit.com/
+# https://www.inoreader.com/all_articles
 import os
 from bs4 import BeautifulSoup
 import requests
@@ -114,6 +115,48 @@ def parse_tweet_from_url(tweetUrl: str):
 
     return twitterList
 
+
+def get_tweet_fromUrl(rss_url: str):
+    headers = {
+        "User-Agent": "Feedly/1.0.0 (https://feedly.com; 10000000+ users)"  # Feedly客户端
+
+        # 其他常见RSS客户端标识：
+        # "Feedly/1.0.0"
+        # "Inoreader/5.0.0"
+    }
+
+    try:
+        # 发送请求获取RSS内容
+        response = requests.get(rss_url, headers=headers)
+        response.raise_for_status()  # 检查请求是否成功
+
+        # 解析RSS内容（以RSS 2.0为例）
+        soup = BeautifulSoup(response.text, "xml")
+        entries = soup.find_all("item")  # 查找所有条目
+
+        if entries:
+            print("成功解析RSS内容：")
+            for i, entry in enumerate(entries[:5], 1):  # 显示前5条
+                title = entry.title.text if entry.title else "无标题"
+                link = entry.link.text if entry.link else "无链接"
+                print(f"\n{i}. 标题：{title}")
+                print(f"   链接：{link}")
+        else:
+            # 若为Atom格式，尝试查找<entry>标签
+            entries = soup.find_all("entry")
+            if entries:
+                print("成功解析Atom格式内容：")
+                for i, entry in enumerate(entries[:5], 1):
+                    title = entry.title.text if entry.title else "无标题"
+                    link = entry.link.get("href") if entry.link else "无链接"
+                    print(f"\n{i}. 标题：{title}")
+                    print(f"   链接：{link}")
+            else:
+                print("未找到RSS条目，可能格式不兼容")
+
+    except Exception as e:
+        print(f"访问失败：{e}")
+    
 def read_rss_feed(feed_url):
     """
     读取并解析 RSS 源。
@@ -202,6 +245,10 @@ def parese_tweet_from_json():
 
 
 if __name__ == "__main__":
+    
+    get_tweet_fromUrl("https://rss.xcancel.com/TingHu888/rss")
+    
+    
     parese_tweet_from_json()
     # api_logger.info("done")
     # 每小时执行一次 parese_tweet_from_json 函数
