@@ -37,7 +37,15 @@ TWITTER = "https://rss.xcancel.com/"
 # https://rss.xcancel.com/TingHu888/rss
 
 TWITTER_INSTANCES = [
-    "https://rss.xcancel.com/",
+    {
+        "name": "privacyredirect_search",
+        "url_template": "https://nitter.privacyredirect.com/search/rss?f=tweets&q={name}"
+    },
+    {
+        "name": "xcancel",
+        "url_template": "https://rss.xcancel.com/{name}/rss"
+    },
+
     # "https://nitter.tiekoetter.com/",
     
     # "https://nitter.privacydev.net/",
@@ -202,7 +210,8 @@ def read_rss_feed(feed_url):
     
 def get_tweet_fromName(name: str):
     for instance in TWITTER_INSTANCES:
-        rssUrl = f"{instance}{name}/rss"
+        rssUrl = instance["url_template"].format(name=name)
+
         try:
             # twitterList = parse_tweet_from_url(rssUrl)
             twitterList = read_rss_feed(rssUrl)
