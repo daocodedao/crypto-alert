@@ -235,7 +235,6 @@ class Util:
 
   def getProxy():
     if platform.system() == "Linux":
-        if Util.isVpnvailable():
           return "127.0.0.1:1087"
     else:
        return None
