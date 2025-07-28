@@ -60,7 +60,8 @@ class DBManager:
                         description=entry['description'],
                         published=entry['published'],
                         tweet_id=tweet_id,
-                        author=entry['author']
+                        author=entry['author'],
+                        isCryptoRelated=entry['isCryptoRelated']
                     )
                     session.add(twitter_entry)
                     new_record_count += 1
@@ -71,6 +72,7 @@ class DBManager:
                     existing_entry.description = entry['description']
                     existing_entry.published = entry['published']
                     existing_entry.author = entry['author']
+                    existing_entry.isCryptoRelated = entry['isCryptoRelated']
             session.commit()
             api_logger.info(f"成功插入 {new_record_count} 条新记录，更新 {len(entries) - new_record_count} 条重复记录")
         except Exception as e:

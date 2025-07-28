@@ -28,7 +28,7 @@ def ask_is_crypto_related_from_openai(content: str) -> Dict:
         response = openAiClient.chat.completions.create(
             model="Qwen/Qwen3-8B",
             messages=[
-                {"role": "system", "content": "你是一个内容分析师，判断内容是否和以下主题相关：1. 虚拟货币\n2.加密货币\n3.投资 "},
+                {"role": "system", "content": "你是一个内容分析师，判断内容是否和以下主题相关：1. 虚拟货币\n2.加密货币\n3.投资相关 "},
                 {"role": "user", "content": prompt}
             ]
         )
@@ -66,10 +66,10 @@ def ask_analysis_from_openai(content: str):
 
 请仅返回 JSON 格式数据，不要有其他文字说明，格式如下:
 {{
-    "isPeak": false,
-    "favorableCoins": [],
-    "peakTime": null,
-    "marketOutlook": ""
+    "目前是否见顶": false,
+    "看好的币": [],
+    "预计什么时候到顶": null,
+    "后市看法": ""
 }}
 """
         response = openAiClient.chat.completions.create(

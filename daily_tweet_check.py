@@ -8,17 +8,18 @@ from utils.logger_settings import api_logger
 def daily_task():
     db_manager = DBManager()
     # 从数据库获取最新 10 条 isCryptoRelated 为 True 的推文
-    tweets = db_manager.get_latest_crypto_related_tweets(10)
+    tweets = db_manager.get_latest_crypto_related_tweets(20)
     if tweets:
-        for tweet in tweets:
-            tweet_content = tweet.get('title')
-            try:
-                # 使用 OpenAI 分析推文
-                analysis_result = ask_analysis_from_openai(tweet_content)
-                api_logger.info(f"推文内容: {tweet_content}\n分析结果: {analysis_result}")  
-                NotifyUtil.notifyFeishu(f"分析结果: {analysis_result}")
-            except Exception as e:
-                print(f"分析推文出错: {e}")
+        # 收集所有推文标题
+        tweet_contents = [tweet.get('title') for tweet in tweets]
+        combined_content = "\n".join(tweet_contents)
+        try:
+            # 使用 OpenAI 一次性分析所有推文
+            analysis_result = ask_analysis_from_openai(combined_content)
+            api_logger.info(f"推文内容: {combined_content}\n分析结果: {analysis_result}")  
+            NotifyUtil.notifyFeishu(f"分析结果: {analysis_result}")
+        except Exception as e:
+            print(f"分析推文出错: {e}")
 
 
 if __name__ == "__main__":
