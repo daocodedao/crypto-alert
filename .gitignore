@@ -5,3 +5,4 @@ datamine.log
 logs/
 config.ini
 .env
+__pycache__/
