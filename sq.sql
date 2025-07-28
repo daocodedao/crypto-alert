@@ -13,5 +13,6 @@ CREATE TABLE IF NOT EXISTS twitter_entries (
     published DATETIME,
     tweet_id VARCHAR(255) NOT NULL UNIQUE,
     author VARCHAR(255), -- 添加作者字段
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    isCryptoRelated BOOLEAN DEFAULT FALSE, 
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

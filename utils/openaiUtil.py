@@ -3,7 +3,9 @@ from openai import OpenAI
 from typing import List, Dict, Tuple
 
 from utils.logger_settings import api_logger
-
+# 处理可能的JSON格式问题
+import json
+import re
 
 
 openAiClient = OpenAI(base_url="http://39.105.194.16:6691/v1", api_key="key")
@@ -31,30 +33,19 @@ def ask_is_crypto_related_from_openai(content: str) -> Dict:
         
         # 提取返回的JSON内容
         content = response.choices[0].message.content.strip()
-        content = re.sub(r'<think>.*?</think>', '', content, flags=re.DOTALL)
-        # 处理可能的JSON格式问题
-        import json
-        import re
-        
+        content = re.sub(r'<think>.*?</think>', '', content, flags=re.DOTALL).strip()
+
         # 尝试提取JSON部分
         json_match = re.search(r'({.*})', content, re.DOTALL)
         if json_match:
             content = json_match.group(1)
         
-        university_info = json.loads(content)
-        
+        dic_info = json.loads(content)
+        isRelated = dic_info["isRelated"]
         # 确保返回所有必要字段
-        return {
-            "name_en": university_info.get("name_en", ""),
-            "website": university_info.get("website", ""),
-            "city": university_info.get("city", "")
-        }
-        
+        return isRelated
+    
     except Exception as e:
         api_logger.error(f"从OpenAI获取大学信息失败: {e}")
         # 返回空信息
-        return {
-            "name_en": "",
-            "website": "",
-            "city": ""
-        }
+        return False

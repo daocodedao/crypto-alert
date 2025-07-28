@@ -12,6 +12,8 @@ import schedule
 import time
 import feedparser
 from db_manager import DBManager
+from utils.openaiUtil import ask_is_crypto_related_from_openai
+
 
 
 # 初始化 DBManager 实例
@@ -138,7 +140,6 @@ def read_rss_feed(feed_url):
                 api_logger.warning(f"无法解析发布时间: {published_str}")
                 published_dt = None
 
-
             entry_info = {
                 'title': entry.get('title', '无标题'),
                 'link': entry.get('link', '无链接'),
@@ -154,6 +155,8 @@ def read_rss_feed(feed_url):
         return []
     
     
+
+
 def get_tweet_fromName(name: str):
     for instance in TWITTER_INSTANCES:
         rssUrl = f"{instance}{name}/rss"
@@ -161,8 +164,16 @@ def get_tweet_fromName(name: str):
             # twitterList = parse_tweet_from_url(rssUrl)
             twitterList = read_rss_feed(rssUrl)
             if twitterList and len(twitterList) > 0:
+                new_twitter_list = []
+                for entry in twitterList:
+                    if not db_manager.is_tweet_id_exists(entry['tweet_id']):
+                        api_logger.info(f"新推特: {entry['tweet_id']} content:{entry['title']} 没在数据库中，判断是否币圈相关")
+                        is_crypto_related = ask_is_crypto_related_from_openai(entry['title'])
+                        entry['isCryptoRelated'] = is_crypto_related
+                        new_twitter_list.append(entry)
+                if new_twitter_list:
+                    db_manager.insert_twitter_entries(new_twitter_list)
                 api_logger.info(f"解析 {rssUrl} 成功")
-                db_manager.insert_twitter_entries(twitterList)
                 return twitterList
             else:
                 api_logger.info(f"解析 {rssUrl} 失败, 未获取到内容")

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, TIMESTAMP
+from sqlalchemy import Column, Integer, String, Text, DateTime, TIMESTAMP, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -13,3 +13,4 @@ class TwitterEntry(Base):
     tweet_id = Column(String(255), nullable=False, unique=True)
     author = Column(String(255))
     created_at = Column(TIMESTAMP, server_default='CURRENT_TIMESTAMP')
+    isCryptoRelated = Column(Boolean, default=False)  # 新增字段

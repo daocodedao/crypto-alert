@@ -106,3 +106,20 @@ class DBManager:
             return []
         finally:
             session.close()  
+
+    def is_tweet_id_exists(self, tweet_id):
+        """
+        检查 tweet_id 是否已存在于数据库中。
+
+        :param tweet_id: 要检查的 tweet_id
+        :return: 存在返回 True，不存在返回 False
+        """
+        session = self._get_session()
+        try:
+            existing_entry = session.query(TwitterEntry).filter_by(tweet_id=tweet_id).first()
+            return existing_entry is not None
+        except Exception as e:
+            api_logger.error(f"检查 tweet_id {tweet_id} 是否存在时出错: {e}")
+            return False
+        finally:
+            session.close()  
