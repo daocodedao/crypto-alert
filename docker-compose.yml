@@ -4,7 +4,7 @@ services:
     image: freshrss/freshrss
     container_name: freshrss
     ports:
-      - "8080:3080"
+      - "8080:8080"
     volumes:
       - ./data:/var/www/FreshRSS/data
     environment:
