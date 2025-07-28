@@ -10,16 +10,21 @@ def daily_task():
     # 从数据库获取最新 10 条 isCryptoRelated 为 True 的推文
     tweets = db_manager.get_latest_crypto_related_tweets(20)
     if tweets:
+        api_logger.info(f"获取到 {len(tweets)} 条推文")
         # 收集所有推文标题
         tweet_contents = [tweet.get('title') for tweet in tweets]
         combined_content = "\n".join(tweet_contents)
         try:
             # 使用 OpenAI 一次性分析所有推文
             analysis_result = ask_analysis_from_openai(combined_content)
-            api_logger.info(f"推文内容: {combined_content}\n分析结果: {analysis_result}")  
-            NotifyUtil.notifyFeishu(f"分析结果: {analysis_result}")
+            analysis_result_str = "\n".join([f"{key}: {value}" for key, value in analysis_result.items()])
+
+            api_logger.info(f"推文内容: {combined_content}\n分析结果: {analysis_result_str}")  
+            NotifyUtil.notifyFeishu(f"分析结果: \n{analysis_result_str}")
         except Exception as e:
             print(f"分析推文出错: {e}")
+            NotifyUtil.notifyFeishu(f"分析推文出错: {e}")
+
 
 
 if __name__ == "__main__":
