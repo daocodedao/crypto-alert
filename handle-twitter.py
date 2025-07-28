@@ -154,9 +154,6 @@ def read_rss_feed(feed_url):
         api_logger.error(f"读取 RSS 源 {feed_url} 时出错: {e}")
         return []
     
-    
-
-
 def get_tweet_fromName(name: str):
     for instance in TWITTER_INSTANCES:
         rssUrl = f"{instance}{name}/rss"
@@ -167,8 +164,8 @@ def get_tweet_fromName(name: str):
                 new_twitter_list = []
                 for entry in twitterList:
                     if not db_manager.is_tweet_id_exists(entry['tweet_id']):
-                        api_logger.info(f"新推特: {entry['tweet_id']} content:{entry['title']} 没在数据库中，判断是否币圈相关")
                         is_crypto_related = ask_is_crypto_related_from_openai(entry['title'])
+                        api_logger.info(f"新推特: {entry['tweet_id']} \n content:\n {entry['title']} \n没在数据库中，判断是否币圈相关:{is_crypto_related}")
                         entry['isCryptoRelated'] = is_crypto_related
                         new_twitter_list.append(entry)
                 if new_twitter_list:
