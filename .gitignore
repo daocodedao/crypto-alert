@@ -6,3 +6,5 @@ __pycache__/
 datamine.log
 logs/
 config.ini
+
+.env
