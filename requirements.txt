@@ -1,0 +1,10 @@
+python-binance==1.0.25
+schedule
+feedparser
+requests
+bs4
+requests
+mysql-connector-python
+sqlalchemy
+dotenv
+openai
