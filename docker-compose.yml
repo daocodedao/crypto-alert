@@ -1,12 +1,14 @@
 version: '3'
 services:
   freshrss:
-    image: freshrss/freshrss
+    image: lscr.io/linuxserver/freshrss:latest
     container_name: freshrss
     ports:
-      - "8080:8080"
+      - "3080:80"
     volumes:
-      - /data/work/FreshRSS/data:/var/www/FreshRSS/data
+      - /data/work/freshrss/data:/config
     environment:
       - TZ=Asia/Shanghai  # 设置时区
+      - PUID=1000
+      - PGID=1000
     restart: always
