@@ -1,10 +1,7 @@
 venv/
 __pycache__/
 .DS_Store
-
-
 datamine.log
 logs/
 config.ini
-
 .env
