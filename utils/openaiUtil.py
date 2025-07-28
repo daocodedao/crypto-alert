@@ -57,10 +57,10 @@ def ask_analysis_from_openai(content: str):
     try:
         prompt = f"""
 以下内容是 twitter 用户的发言，从发言中判断 crypto 币圈
-1）目前是否见顶
-2）看好哪些币
-3）预计什么时候到顶
-4）对后市的看法
+1.目前是否见顶
+2.看好哪些币
+3.预计什么时候到顶
+4.对后市的看法
 
 推文信息: {content}
 
