@@ -124,6 +124,7 @@ def read_rss_feed(feed_url):
     try:
         # 使用 feedparser 解析 RSS 源
         feed = feedparser.parse(feed_url)
+        api_logger.info(f"feed:{feed}")
         if feed.bozo:
             api_logger.error(f"解析 RSS 源 {feed_url} 时出错: {feed.bozo_exception}")
             return []
