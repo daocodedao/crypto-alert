@@ -165,8 +165,12 @@ def read_rss_feed(feed_url):
     :return: 包含 RSS 条目信息的列表，如果出错则返回空列表
     """
     try:
+        proxy = {
+            "http": "http://127.0.0.1:1087",  # 替换为实际代理地址和端口
+            "https": "http://127.0.0.1:1087"
+        }
         # 使用 feedparser 解析 RSS 源
-        feed = feedparser.parse(feed_url)
+        feed = feedparser.parse(feed_url, request_headers={"proxies": proxy})
         api_logger.info(f"feed:{feed}")
         if feed.bozo:
             api_logger.error(f"解析 RSS 源 {feed_url} 时出错: {feed.bozo_exception}")
@@ -229,9 +233,9 @@ def parese_tweet_from_json():
         # 解析 JSON 数据
         data = json.load(file)
 
-    if Util.getProxy():
-        os.environ['HTTP_PROXY'] = Util.getProxy()
-        os.environ['HTTPS_PROXY'] = Util.getProxy()
+    # if Util.getProxy():
+    #     os.environ['HTTP_PROXY'] = Util.getProxy()
+    #     os.environ['HTTPS_PROXY'] = Util.getProxy()
 
     # 打印解析后的数据
     for account in data:
