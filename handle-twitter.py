@@ -248,7 +248,7 @@ def parese_tweet_from_json():
 
 if __name__ == "__main__":
     
-    get_tweet_fromUrl("https://rss.xcancel.com/TingHu888/rss")
+    # get_tweet_fromUrl("https://rss.xcancel.com/TingHu888/rss")
     
     
     parese_tweet_from_json()
