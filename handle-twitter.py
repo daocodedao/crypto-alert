@@ -37,9 +37,9 @@ TWITTER = "https://rss.xcancel.com/"
 
 TWITTER_INSTANCES = [
     "https://rss.xcancel.com/",
-    "https://nitter.tiekoetter.com/",
+    # "https://nitter.tiekoetter.com/",
     
-    "https://nitter.privacydev.net/",
+    # "https://nitter.privacydev.net/",
     # "https://nitter.poast.org/",
     # "https://nitter.space/",
     # "https://lightbrd.com/",
