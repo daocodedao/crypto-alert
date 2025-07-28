@@ -1,6 +1,7 @@
 # pip install DiscordWebhook
 # https://github.com/S-PScripts/chromebook-utilities/blob/700fb88ca6f14959a1b57e39942ac0013dc78575/Alternatives/Twitter%20(X)%20Altenative%20Links.txt#L22
 # https://twiiit.com/
+import os
 from bs4 import BeautifulSoup
 import requests
 import xml.etree.ElementTree as ET
@@ -13,7 +14,7 @@ import time
 import feedparser
 from db_manager import DBManager
 from utils.openaiUtil import ask_is_crypto_related_from_openai
-
+from utils.util import Util
 
 
 # 初始化 DBManager 实例
@@ -183,6 +184,10 @@ def parese_tweet_from_json():
     with open("twitter.json", "r", encoding="utf-8") as file:
         # 解析 JSON 数据
         data = json.load(file)
+
+    if Util.getProxy():
+        os.environ['HTTP_PROXY'] = Util.getProxy()
+        os.environ['HTTPS_PROXY'] = Util.getProxy()
 
     # 打印解析后的数据
     for account in data:

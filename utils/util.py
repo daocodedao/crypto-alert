@@ -231,25 +231,14 @@ class Util:
         for line in logStrList:
             api_logger.info(line)
 
-  @staticmethod
-  def isVpnvailable():
-    try:
-        output = subprocess.check_output("sixvpn status", shell=True, text=True)
-        if "正在运行中" in output:
-          return True
-        else:
-           return False
-    except subprocess.CalledProcessError:
-        return False
+
 
   def getProxy():
     if platform.system() == "Linux":
         if Util.isVpnvailable():
-          return "127.0.0.1:10809"
-        else:
-          return "192.168.0.77:18808"
+          return "127.0.0.1:1087"
     else:
-       return "127.0.0.1:10809"
+       return None
      
 
     
