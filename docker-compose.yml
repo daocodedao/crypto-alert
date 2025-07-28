@@ -6,7 +6,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./data:/var/www/FreshRSS/data
+      - ./data:/data/work/FreshRSS/data
     environment:
       - TZ=Asia/Shanghai  # 设置时区
     restart: always
