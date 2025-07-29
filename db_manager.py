@@ -155,3 +155,37 @@ class DBManager:
             return []
         finally:
             session.close()  
+            
+            
+    def get_latest_crypto_related_tweets_since(self, since_cursor=None, limit=10):
+        """
+        从数据库中获取自指定时间后新增的 isCryptoRelated 为 True 的推特条目信息。
+
+        :param since_cursor: 起始时间，默认为 None
+        :param limit: 要获取的记录数量，默认为 10
+        :return: 包含推特条目信息的列表
+        """
+        session = self._get_session()
+        try:
+            query = session.query(TwitterEntry).filter_by(isCryptoRelated=True)
+            if since_cursor:
+                query = query.filter(TwitterEntry.published > since_cursor)
+            entries = query.order_by(desc(TwitterEntry.published)).limit(limit).all()
+            result = []
+            for entry in entries:
+                result.append({
+                    'id': entry.id,
+                    'title': entry.title,
+                    'link': entry.link,
+                    'description': entry.description,
+                    'published': entry.published,
+                    'tweet_id': entry.tweet_id,
+                    'author': entry.author,
+                    'created_at': entry.created_at
+                })
+            return result
+        except Exception as e:
+            api_logger.error(f"读取数据库出错: {e}")
+            return []
+        finally:
+            session.close()

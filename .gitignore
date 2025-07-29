@@ -6,3 +6,4 @@ logs/
 config.ini
 .env
 __pycache__/
+tweet_cursor.txt
