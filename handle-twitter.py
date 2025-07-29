@@ -173,7 +173,6 @@ def read_rss_feed(feed_url):
     :return: 包含 RSS 条目信息的列表，如果出错则返回空列表
     """
     try:
-
         # 使用 feedparser 解析 RSS 源
         feed = feedparser.parse(feed_url)
         api_logger.info(f"feed:{feed}")
