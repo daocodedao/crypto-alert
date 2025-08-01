@@ -193,6 +193,11 @@ def read_rss_feed(feed_url):
                 api_logger.warning(f"无法解析发布时间: {published_str}")
                 published_dt = None
 
+            title = entry.get('title', '无标题')
+            if "R to @TingHu888" in title:
+                api_logger.info(f"跳过推文: {title}，原因：标题包含 'R to @TingHu888'")
+                continue
+            
             entry_info = {
                 'title': entry.get('title', '无标题'),
                 'link': entry.get('link', '无链接'),
@@ -202,6 +207,8 @@ def read_rss_feed(feed_url):
                 'author': entry.get('author', '无作者')
             }
             entries.append(entry_info)
+            
+            
         return entries
     except Exception as e:
         api_logger.error(f"读取 RSS 源 {feed_url} 时出错: {e}")
