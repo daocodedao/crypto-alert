@@ -7,3 +7,4 @@ config.ini
 .env
 __pycache__/
 tweet_cursor.txt
+binance_contract_top100_volume.csv
