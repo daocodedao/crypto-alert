@@ -14,6 +14,7 @@ def getBinanceClient():
     
     # 如果有代理设置，则配置环境变量
     if proxy:
+        print(f"使用代理: {proxy}")
         os.environ['HTTP_PROXY'] = f'http://{proxy}'
         os.environ['HTTPS_PROXY'] = f'https://{proxy}'
     
