@@ -8,13 +8,7 @@ import os
 from utils.notify import NotifyUtil
 from utils.util import Util
 
-def get_latest_mark_price_and_funding_rate(symbol):
-    """
-    获取指定交易对的最新标记价格和资金费率
-    
-    :param symbol: 交易对名称
-    :return: 包含标记价格和资金费率的字典
-    """
+def getBinanceClient():
     # 获取代理设置
     proxy = Util.getProxy()
     
@@ -29,6 +23,18 @@ def get_latest_mark_price_and_funding_rate(symbol):
     else:
         # 如果没有代理设置，直接初始化
         client = Client()
+    
+    return client
+
+def get_latest_mark_price_and_funding_rate(symbol):
+    """
+    获取指定交易对的最新标记价格和资金费率
+    
+    :param symbol: 交易对名称
+    :return: 包含标记价格和资金费率的字典
+    """
+    # 初始化Binance客户端（无需API密钥，因为只需要访问公共数据）
+    client = getBinanceClient()
     
     try:
         # 获取标记价格
