@@ -7,6 +7,7 @@ import os
 
 from utils.notify import NotifyUtil
 from utils.util import Util
+from utils.logger_settings import api_logger
 
 def getBinanceClient():
     # 获取代理设置
@@ -71,7 +72,7 @@ def check_funding_rate_threshold(symbol, threshold=0.1):
             analysis_result_str = analysis_result_str + f"  资金费率: {funding_rate:.4f}%\n"
             analysis_result_str = analysis_result_str + f"\n  下次结算时间: {data['nextFundingTime']}\n"
             analysis_result_str = analysis_result_str + "-" * 50
-            
+            api_logger.info(analysis_result_str)
             NotifyUtil.notifyFeishu(analysis_result_str)
 
 
@@ -82,7 +83,7 @@ def monitor_funding_rates():
     symbols = ["LUNA2USDT", "PIPPINUSDT"]
     threshold = 0.1  # 0.1% 阈值
     
-    print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 开始监控资金费率...")
+    api_logger.info(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 开始监控资金费率...")
     
     for symbol in symbols:
         check_funding_rate_threshold(symbol, threshold)
@@ -94,8 +95,8 @@ def start_monitoring():
     # 每小时的55分执行一次监控
     schedule.every().hour.at(":55").do(monitor_funding_rates)
     
-    print("资金费率监控已启动，将在每小时55分检查LUNA2USDT和PIPPINUSDT的资金费率...")
-    print("按Ctrl+C退出程序")
+    api_logger.inf("资金费率监控已启动，将在每小时55分检查LUNA2USDT和PIPPINUSDT的资金费率...")
+    api_logger.inf("按Ctrl+C退出程序")
     
     # 初始执行一次
     monitor_funding_rates()
@@ -106,5 +107,5 @@ def start_monitoring():
         time.sleep(1)
 
 if __name__ == "__main__":
-    # start_monitoring()
-    monitor_funding_rates()
+    start_monitoring()
+    # monitor_funding_rates()
