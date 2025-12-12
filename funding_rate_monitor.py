@@ -3,8 +3,10 @@ import time
 from binance.client import Client
 from binance.exceptions import BinanceAPIException
 from datetime import datetime
+import os
 
 from utils.notify import NotifyUtil
+from utils.util import Util
 
 def get_latest_mark_price_and_funding_rate(symbol):
     """
@@ -13,8 +15,20 @@ def get_latest_mark_price_and_funding_rate(symbol):
     :param symbol: 交易对名称
     :return: 包含标记价格和资金费率的字典
     """
+    # 获取代理设置
+    proxy = Util.getProxy()
+    
     # 初始化Binance客户端（无需API密钥，因为只需要访问公共数据）
-    client = Client()
+    if proxy:
+        # 如果有代理设置，则配置代理
+        proxies = {
+            'http': f'http://{proxy}',
+            'https': f'https://{proxy}'
+        }
+        client = Client(proxies=proxies)
+    else:
+        # 如果没有代理设置，直接初始化
+        client = Client()
     
     try:
         # 获取标记价格
