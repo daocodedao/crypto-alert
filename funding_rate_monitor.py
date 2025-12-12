@@ -12,17 +12,13 @@ def getBinanceClient():
     # 获取代理设置
     proxy = Util.getProxy()
     
-    # 初始化Binance客户端（无需API密钥，因为只需要访问公共数据）
+    # 如果有代理设置，则配置环境变量
     if proxy:
-        # 如果有代理设置，则配置代理
-        proxies = {
-            'http': f'http://{proxy}',
-            'https': f'https://{proxy}'
-        }
-        client = Client(proxies=proxies)
-    else:
-        # 如果没有代理设置，直接初始化
-        client = Client()
+        os.environ['HTTP_PROXY'] = f'http://{proxy}'
+        os.environ['HTTPS_PROXY'] = f'https://{proxy}'
+    
+    # 初始化Binance客户端（无需API密钥，因为只需要访问公共数据）
+    client = Client()
     
     return client
 
