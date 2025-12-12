@@ -1,4 +1,10 @@
 import requests
+from binance.client import Client
+
+from binance.exceptions import BinanceAPIException
+from datetime import datetime
+import time
+
 
 def get_contract_top100_volume_pairs():
     """
@@ -67,8 +73,7 @@ def get_contract_top100_volume_pairs():
             print(f"备用域名请求也失败：{e2}")
             return None
 
-# 执行并打印结果
-if __name__ == "__main__":
+def startGetContractTop100():
     top_contracts = get_contract_top100_volume_pairs()
     if top_contracts:
         # 打印前15名示例（合约市场头部更集中，前15名占比极高）
@@ -91,3 +96,110 @@ if __name__ == "__main__":
             writer.writeheader()
             writer.writerows(top_contracts)
         print("\n完整前100名已保存到 binance_contract_top100_volume.csv")
+
+
+def get_funding_rate_history(symbol="BTCUSDT", limit=100):
+    """
+    获取指定交易对的历史资金费率
+    
+    :param symbol: 交易对名称，默认为BTCUSDT
+    :param limit: 获取记录的数量，默认为100条
+    :return: 包含历史资金费率的列表
+    """
+    # 初始化Binance客户端（无需API密钥，因为只需要访问公共数据）
+    client = Client()
+    
+    try:
+        # 获取历史资金费率
+        # API文档: https://binance-docs.github.io/apidocs/futures/en/#get-funding-rate-history
+        funding_rates = client.futures_funding_rate(symbol=symbol, limit=limit)
+        
+        # 格式化数据
+        formatted_rates = []
+        for rate in funding_rates:
+            formatted_rates.append({
+                "symbol": rate['symbol'],
+                "fundingTime": datetime.fromtimestamp(rate['fundingTime'] / 1000).strftime('%Y-%m-%d %H:%M:%S'),
+                "fundingRate": float(rate['fundingRate']) * 100  # 转换为百分比
+            })
+        
+        return formatted_rates
+    
+    except BinanceAPIException as e:
+        print(f"获取资金费率历史失败：{e}")
+        return None
+
+
+def startGetFundingRateHistory():
+    # 获取资金费率历史示例
+    print("\n" + "="*50)
+    print("币安合约市场资金费率历史示例（BTCUSDT）：")
+    print("-" * 50)
+    funding_rates = get_funding_rate_history()
+    if funding_rates:
+        print(f"{'时间':<20} {'交易对':<12} {'资金费率':<10}")
+        print("-" * 50)
+        for rate in funding_rates[:10]:  # 显示最近10条记录
+            print(f"{rate['fundingTime']:<20} {rate['symbol']:<12} {rate['fundingRate']:.4f}%")
+
+
+def get_latest_mark_price_and_funding_rate(symbol="BTCUSDT"):
+    """
+    获取指定交易对的最新标记价格和资金费率
+    
+    :param symbol: 交易对名称，默认为BTCUSDT
+    :return: 包含标记价格和资金费率的字典
+    """
+    # 初始化Binance客户端（无需API密钥，因为只需要访问公共数据）
+    client = Client()
+    
+    try:
+        # 获取标记价格
+        mark_price = client.futures_mark_price(symbol=symbol)
+        
+        # 获取当前资金费率
+        funding_rate = client.futures_funding_rate(symbol=symbol, limit=1)
+        
+        # 格式化数据
+        result = {
+            "symbol": mark_price['symbol'],
+            "markPrice": float(mark_price['markPrice']),
+            "indexPrice": float(mark_price['indexPrice']),
+            "estimatedSettlePrice": float(mark_price['estimatedSettlePrice']),
+            "lastFundingRate": float(funding_rate[0]['fundingRate']) * 100 if funding_rate else None,  # 转换为百分比
+            "nextFundingTime": datetime.fromtimestamp(int(mark_price['nextFundingTime']) / 1000).strftime('%Y-%m-%d %H:%M:%S') if mark_price['nextFundingTime'] else None
+        }
+        
+        return result
+    
+    except BinanceAPIException as e:
+        print(f"获取标记价格和资金费率失败：{e}")
+        return None
+
+
+def startGetLatestMarkPriceAndFundingRate():
+    # 获取最新标记价格和资金费率示例
+    
+    print("\n" + "="*60)
+    symbol = "LUNA2USDT"
+    # PIPPINUSDT
+    print("币安合约市场最新标记价格和资金费率示例：")
+    print("-" * 60)
+    data = get_latest_mark_price_and_funding_rate(symbol)
+    if data:
+        print(f"{'交易对':<12} {'标记价格':<15} {'指数价格':<15} {'预估结算价':<15} {'资金费率':<10} {'下次资金费用时间':<20}")
+        print("-" * 60)
+        print(f"{data['symbol']:<12} "
+              f"{data['markPrice']:<15.2f} "
+              f"{data['indexPrice']:<15.2f} "
+              f"{data['estimatedSettlePrice']:<15.2f} "
+              f"{data['lastFundingRate']:<10.4f}% " if data['lastFundingRate'] else f"{'N/A':<10} "
+              f"{data['nextFundingTime']:<20}")
+
+
+
+
+# 执行并打印结果
+if __name__ == "__main__":
+    
+    startGetLatestMarkPriceAndFundingRate()
