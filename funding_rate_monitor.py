@@ -95,8 +95,8 @@ def start_monitoring():
     # 每小时的55分执行一次监控
     schedule.every().hour.at(":55").do(monitor_funding_rates)
     
-    api_logger.inf("资金费率监控已启动，将在每小时55分检查LUNA2USDT和PIPPINUSDT的资金费率...")
-    api_logger.inf("按Ctrl+C退出程序")
+    api_logger.info("资金费率监控已启动，将在每小时55分检查LUNA2USDT和PIPPINUSDT的资金费率...")
+    api_logger.info("按Ctrl+C退出程序")
     
     # 初始执行一次
     monitor_funding_rates()
