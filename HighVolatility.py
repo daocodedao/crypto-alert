@@ -4,7 +4,26 @@ from binance.client import Client
 from binance.exceptions import BinanceAPIException
 from datetime import datetime
 import time
+from utils.util import Util
 
+
+def getBinanceClient():
+    # 获取代理设置
+    proxy = Util.getProxy()
+    
+    # 初始化Binance客户端（无需API密钥，因为只需要访问公共数据）
+    if proxy:
+        # 如果有代理设置，则配置代理
+        proxies = {
+            'http': f'http://{proxy}',
+            'https': f'https://{proxy}'
+        }
+        client = Client(proxies=proxies)
+    else:
+        # 如果没有代理设置，直接初始化
+        client = Client()
+    
+    return client
 
 def get_contract_top100_volume_pairs():
     """
@@ -107,7 +126,7 @@ def get_funding_rate_history(symbol="BTCUSDT", limit=100):
     :return: 包含历史资金费率的列表
     """
     # 初始化Binance客户端（无需API密钥，因为只需要访问公共数据）
-    client = Client()
+    client = getBinanceClient()
     
     try:
         # 获取历史资金费率
@@ -151,7 +170,7 @@ def get_latest_mark_price_and_funding_rate(symbol="BTCUSDT"):
     :return: 包含标记价格和资金费率的字典
     """
     # 初始化Binance客户端（无需API密钥，因为只需要访问公共数据）
-    client = Client()
+    client = getBinanceClient()
     
     try:
         # 获取标记价格
