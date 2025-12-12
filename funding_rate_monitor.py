@@ -106,5 +106,5 @@ def start_monitoring():
         time.sleep(1)
 
 if __name__ == "__main__":
-    start_monitoring()
-    # monitor_funding_rates()
+    # start_monitoring()
+    monitor_funding_rates()
