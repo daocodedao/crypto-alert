@@ -69,6 +69,7 @@ def check_funding_rate_threshold(symbol, threshold=0.1):
         funding_str = f"  标记价格: {data['markPrice']:.4f}\n"
         funding_str = funding_str + f"  资金费率: {funding_rate:.4f}%\n"
         funding_str = funding_str + f"\n  下次结算时间: {data['nextFundingTime']}\n"
+        api_logger.info(funding_str)
         
         if abs(funding_rate) > threshold:
             # 打印通知（后续可以替换为其他通知方式）
