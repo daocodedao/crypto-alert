@@ -65,12 +65,15 @@ def check_funding_rate_threshold(symbol, threshold=0.1):
     data = get_latest_mark_price_and_funding_rate(symbol)
     if data and data['lastFundingRate'] is not None:
         funding_rate = data['lastFundingRate']
+        
+        funding_str = analysis_result_str + f"  标记价格: {data['markPrice']:.4f}\n"
+        funding_str = analysis_result_str + f"  资金费率: {funding_rate:.4f}%\n"
+        funding_str = analysis_result_str + f"\n  下次结算时间: {data['nextFundingTime']}\n"
+        
         if abs(funding_rate) > threshold:
             # 打印通知（后续可以替换为其他通知方式）
             analysis_result_str = f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 警告：{symbol} 资金费率异常！\n"
-            analysis_result_str = analysis_result_str + f"  标记价格: {data['markPrice']:.4f}\n"
-            analysis_result_str = analysis_result_str + f"  资金费率: {funding_rate:.4f}%\n"
-            analysis_result_str = analysis_result_str + f"\n  下次结算时间: {data['nextFundingTime']}\n"
+            analysis_result_str = analysis_result_str + funding_str
             analysis_result_str = analysis_result_str + "-" * 50
             api_logger.info(analysis_result_str)
             NotifyUtil.notifyFeishu(analysis_result_str)
