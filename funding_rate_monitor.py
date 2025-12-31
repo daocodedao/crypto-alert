@@ -90,7 +90,10 @@ def monitor_funding_rates():
     api_logger.info(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 开始监控资金费率...")
     
     for symbol in symbols:
-        check_funding_rate_threshold(symbol, threshold)
+        try:
+            check_funding_rate_threshold(symbol, threshold)
+        except Exception as e:
+            api_logger.error(f"初始执行监控资金费率失败：{e}")
 
 def start_monitoring():
     """
@@ -104,7 +107,8 @@ def start_monitoring():
     
     # 初始执行一次
     monitor_funding_rates()
-    
+
+
     # 持续运行调度器
     while True:
         schedule.run_pending()

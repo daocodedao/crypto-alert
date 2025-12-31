@@ -62,7 +62,7 @@ def get_contract_top100_volume_pairs():
         )
         
         # 取前10名，提取关键信息（排名、交易对、成交金额、涨跌幅）
-        top10 = [
+        top20 = [
             {
                 "rank": i + 1,
                 "symbol": contract["symbol"],
@@ -70,10 +70,10 @@ def get_contract_top100_volume_pairs():
                 "24h_change": f"{float(contract['priceChangePercent']):.2f}%",
                 "24h_trades": int(contract.get("count", 0))  # 24h成交笔数（可选）
             }
-            for i, contract in enumerate(sorted_contracts[:10])
+            for i, contract in enumerate(sorted_contracts[:20])
         ]
         
-        return top10
+        return top20
     
     except requests.exceptions.RequestException as e:
         print(f"请求失败：{e}")
@@ -108,13 +108,13 @@ def startGetContractTop100():
                 f"{contract['24h_change']:<10}"
             )
         
-        # 保存完整前100名到CSV（可选）
-        import csv
-        with open("binance_contract_top100_volume.csv", "w", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=top_contracts[0].keys())
-            writer.writeheader()
-            writer.writerows(top_contracts)
-        print("\n完整前100名已保存到 binance_contract_top100_volume.csv")
+        # # 保存完整前100名到CSV（可选）
+        # import csv
+        # with open("binance_contract_top100_volume.csv", "w", newline="", encoding="utf-8") as f:
+        #     writer = csv.DictWriter(f, fieldnames=top_contracts[0].keys())
+        #     writer.writeheader()
+        #     writer.writerows(top_contracts)
+        # print("\n完整前100名已保存到 binance_contract_top100_volume.csv")
 
 
 def get_funding_rate_history(symbol="BTCUSDT", limit=100):
@@ -220,5 +220,5 @@ def startGetLatestMarkPriceAndFundingRate():
 
 # 执行并打印结果
 if __name__ == "__main__":
-    
+    # startGetContractTop100()
     startGetLatestMarkPriceAndFundingRate()
